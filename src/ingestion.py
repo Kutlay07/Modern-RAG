@@ -1,5 +1,7 @@
 from langchain_community.document_loaders import DirectoryLoader
 from langchain_community.document_loaders import TextLoader
+from langchain_community.document_loaders import PyPDFLoader
+from langchain_community.document_loaders import BSHTMLLoader
 
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_huggingface import HuggingFaceEmbeddings
@@ -9,13 +11,36 @@ import src.config as config
 
 
 def ingest():
-    loader = DirectoryLoader(
-        config.DOCUMENT_PATH,
-        glob="**/*.txt",
-        loader_cls=TextLoader,
-    )
+    loaders = [
+        DirectoryLoader(
+            config.DOCUMENTS_PATH,
+            glob="**/*.txt",
+            loader_cls=TextLoader,
+        ),
 
-    documents = loader.load()
+        DirectoryLoader(
+            config.DOCUMENTS_PATH,
+            glob="**/*.pdf",
+            loader_cls=PyPDFLoader,
+        ),
+
+        DirectoryLoader(
+            config.DOCUMENTS_PATH,
+            glob="**/*.md",
+            loader_cls=TextLoader,
+        ),
+
+        DirectoryLoader(
+            config.DOCUMENTS_PATH,
+            glob="**/*.html",
+            loader_cls=BSHTMLLoader,
+        ),
+    ]
+
+    documents = []
+
+    for loader in loaders:
+        documents.extend(loader.load())
 
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=500,

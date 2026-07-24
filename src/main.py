@@ -1,6 +1,7 @@
 from src.ingestion import ingest
 from src.retriever import create_retriever
 from src.chain import create_rag_chain
+from transformers import pipeline
 
 from langchain_huggingface import HuggingFacePipeline
 
@@ -15,9 +16,17 @@ def main():
         vector_store
     )
 
-    llm = HuggingFacePipeline.from_model_id(
-        model_id=config.LLM_MODEL,
+    pipe = pipeline(
         task="text-generation",
+        model=config.LLM_MODEL,
+        max_new_tokens=256,
+        temperature=0.1,
+        do_sample=False,
+        return_full_text=False,
+    )
+
+    llm = HuggingFacePipeline(
+        pipeline=pipe,
     )
 
     chain = create_rag_chain(
@@ -33,7 +42,7 @@ def main():
             break
 
         answer = chain.invoke(query)
-
+        
         print("\nAssistant:")
         print(answer)
 
