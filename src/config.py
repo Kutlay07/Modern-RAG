@@ -1,6 +1,6 @@
 EMBEDDING_MODEL = "BAAI/bge-small-en-v1.5"
 
-LLM_MODEL = "google/gemma-3-1b-it"
+LLM_MODEL = "HuggingFaceTB/SmolLM2-1.7B-Instruct"
 
 DOCUMENT_PATH = "data/documents"
 

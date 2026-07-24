@@ -10,7 +10,7 @@ import src.config as config
 
 def ingest():
     loader = DirectoryLoader(
-        config.DOCUMENTS_PATH,
+        config.DOCUMENT_PATH,
         glob="**/*.txt",
         loader_cls=TextLoader,
     )
